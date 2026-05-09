@@ -174,12 +174,10 @@ impl Roslyn {
             "csharp|inlay_hints.csharp_enable_inlay_hints_for_lambda_parameter_types": true,
             "csharp|inlay_hints.csharp_enable_inlay_hints_for_implicit_object_creation": true,
             "csharp|inlay_hints.csharp_enable_inlay_hints_for_collection_expressions": true,
-            // Enable Razor cohosting so the same Roslyn process handles .razor/.cshtml files.
-            "razor": {
-                "language_server": {
-                    "cohosting_enabled": true
-                }
-            },
+            // cohosting_enabled is intentionally NOT set here.
+            // Sending cohosting_enabled:true without the bridge causes Roslyn to register .razor
+            // files as TextDocument instead of Document, breaking all LSP features for those files.
+            // This setting will be sent by the bridge launch path once the bridge is running.
         });
 
         let config_map = roslyn_config.as_object_mut().unwrap();
