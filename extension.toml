@@ -15,8 +15,12 @@ language = "CSharp"
 
 [language_servers.roslyn]
 name = "Roslyn"
-language = "CSharp"
+languages = ["CSharp", "Razor"]
 
 [grammars.c_sharp]
 repository = "https://github.com/tree-sitter/tree-sitter-c-sharp"
 commit = "485f0bae0274ac9114797fc10db6f7034e4086e3"
+
+[grammars.razor]
+repository = "https://github.com/tris203/tree-sitter-razor"
+commit = "a3399c26610817c6d32c7643793caf3729cfb6d2"

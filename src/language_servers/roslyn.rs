@@ -151,9 +151,10 @@ impl Roslyn {
     ) -> Result<Option<zed::serde_json::Value>> {
         let settings = LspSettings::for_worktree(Self::LANGUAGE_SERVER_ID, worktree)
             .ok()
-            .and_then(|lsp_settings| lsp_settings.settings);
+            .and_then(|lsp_settings| lsp_settings.settings)
+            .unwrap_or(zed::serde_json::Value::Object(Default::default()));
 
-        Ok(settings.map(Self::transform_settings_for_roslyn))
+        Ok(Some(Self::transform_settings_for_roslyn(settings)))
     }
 
     fn transform_settings_for_roslyn(settings: zed::serde_json::Value) -> zed::serde_json::Value {
@@ -173,6 +174,12 @@ impl Roslyn {
             "csharp|inlay_hints.csharp_enable_inlay_hints_for_lambda_parameter_types": true,
             "csharp|inlay_hints.csharp_enable_inlay_hints_for_implicit_object_creation": true,
             "csharp|inlay_hints.csharp_enable_inlay_hints_for_collection_expressions": true,
+            // Enable Razor cohosting so the same Roslyn process handles .razor/.cshtml files.
+            "razor": {
+                "language_server": {
+                    "cohosting_enabled": true
+                }
+            },
         });
 
         let config_map = roslyn_config.as_object_mut().unwrap();
